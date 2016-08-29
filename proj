@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Easy switch between projects directories
+#
+# Don't forget create alias for this script 'alias proj=". proj"' in .bash_aliases
+#
+
+WORKSPACE_DIR="${HOME}/Workspace";
+cd "${WORKSPACE_DIR}/$1"
+
+#
+# You can create bash completion function and save it to /etc/bash_completion.d/proj file
+#
+
+#
+# #!/bin/bash
+#
+# __proj()
+# {
+#   local cur prev opts
+#   COMPREPLY=()
+#
+#   _get_comp_words_by_ref cur prev
+#
+# opts="`cd ~/Workspace; ls -1`"
+#
+#   COMPREPLY=( $( compgen -W "${opts}" -- "$cur" ) )
+# }
+# complete -F __proj proj
+#
