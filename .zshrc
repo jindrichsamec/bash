@@ -91,6 +91,8 @@ alias myip='curl http://ipecho.net/plain; echo'
 alias c='clear'
 alias ys='yarn start'
 alias yt='yarn test'
+alias y='yarn'
+alias dcphp='bash -c "clear && docker exec -it bee_php_1 /bin/bash"'
 
 export NVM_DIR="/Users/henry/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
