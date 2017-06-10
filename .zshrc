@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/henry/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -86,10 +86,13 @@ source $ZSH/oh-my-zsh.sh
 
 alias proj='. ~/.bin/proj'
 alias pingg='ping 8.8.8.8'
-alias selenium='java -jar -Dwebdriver.chrome.driver="/Users/henry/.bin/chromedriver" ~/.bin/selenium-server-standalone-3.0.1.jar'
+alias selenium='java -jar -Dwebdriver.chrome.driver="$HOME/.bin/chromedriver" ~/.bin/selenium-server-standalone-3.0.1.jar'
 alias myip='curl http://ipecho.net/plain; echo'
 alias c='clear'
 alias ys='yarn start'
 alias yt='yarn test'
 alias y='yarn'
 alias dcphp='bash -c "clear && docker exec -it bee_php_1 /bin/bash"'
+
+export PATH="$(yarn global bin):$PATH"
+
