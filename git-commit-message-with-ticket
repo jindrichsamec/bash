@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Function to extract ticket number from branch name
+get_ticket_number() {
+    # Extract the branch name
+    branch_name=$(git rev-parse --abbrev-ref HEAD)
+
+    # Extract the ticket number from the branch name (assuming it's in the format ABC-1234)
+    if [[ $branch_name =~ ([A-Z]+-[0-9]+) ]]; then
+        ticket_number="${BASH_REMATCH[1]}"
+    else
+        echo "✋ Error: No ticket number found in branch name."
+        exit 1
+    fi
+}
+
+# Ensure we have a commit message
+if [ -z "$1" ]; then
+    echo "✋ Error: No commit message provided."
+    exit 1
+fi
+
+# Extract the ticket number
+get_ticket_number
+
+# Prepend the ticket number to the commit message
+commit_message="$ticket_number: $1"
+
+# Perform the commit
+git commit -m "$commit_message"

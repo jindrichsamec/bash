@@ -114,6 +114,11 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+# Získání skutečné cesty k aktuálnímu .zshrc
+real_zshrc=$(readlink -f "${(%):-%x}")
+# Získání adresáře k aktuálnímu .zshrc
+real_dir=$(dirname "$real_zshrc")
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -143,7 +148,7 @@ alias yup='y upgrade-interactive --latest'
 # Git aliases
 alias gpf='git push --force-with-lease'
 alias gl="GIT_PAGER= git log --graph --decorate --pretty=oneline --abbrev-commit --all --color | fzf --ansi --layout=reverse"
-alias gcmt="~/SharedSettings/git-commit-message-with-ticket"
+alias gcmt="\"$real_dir\"/git-commit-message-with-ticket"
 
 alias dcup='docker-compose -f docker-compose.yml -f docker-compose.data_unison.yml up'
 alias rcmd='npx redis-commander'
