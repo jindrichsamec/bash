@@ -1,3 +1,5 @@
+# CodeWhisperer pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.pre.zsh"
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -88,7 +90,7 @@ export DEFAULT_USER="$USER"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 #plugins=(git brew git-extras docker python virtualenv heroku docker-compose osx ansible)
-plugins=(brew ansible docker-compose docker python virtualenv heroku docker git git-extras osx sudo sublime colorize history history-substring-search compleat zsh-completions zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting zsh-syntax-highlighting-filetypes)
+plugins=(brew ansible docker-compose docker python virtualenv heroku docker git git-extras sudo sublime colorize history history-substring-search vscode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -122,7 +124,7 @@ alias zshconfig="code ~/.zshrc"
 alias ohmyzsh="code ~/.oh-my-zsh"
 
 alias pingg='ping 8.8.8.8'
-alias myip='curl http://ipecho.net/plain; echo && ipconfig getifaddr en0 && ipconfig getifaddr en1'
+alias myip='curl http://ipecho.net/plain; echo && ipconfig getifaddr en0 && ipconfig getifaddr en1 | qrencode -t ansiutf8 'https://'$(ipconfig getifaddr en0)'
 alias c='clear'
 
 alias wttr='curl -4 wttr.in/~Prague'
@@ -136,22 +138,18 @@ alias ya='yarn add'
 alias yad='yarn add --dev'
 alias y='yarn'
 alias yu='yarn upgrade-interactive'
+alias yup='y upgrade-interactive --latest'
 
 # Git aliases
 alias gpf='git push --force-with-lease'
-alias gst='colorls --gs --tree'
-alias ll='colorls --sd -A'
+alias gl="GIT_PAGER= git log --graph --decorate --pretty=oneline --abbrev-commit --all --color | fzf --ansi --layout=reverse"
+alias gcmt="~/SharedSettings/git-commit-message-with-ticket"
 
 alias dcup='docker-compose -f docker-compose.yml -f docker-compose.data_unison.yml up'
 alias rcmd='npx redis-commander'
 
 #export PATH="$(yarn global bin):$PATH:./node_modules/.bin"
 export PATH="$PATH:./node_modules/.bin"
-export NVM_DIR="$HOME/.nvm"
-  . "/usr/local/opt/nvm/nvm.sh"
-
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
 
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`
@@ -167,3 +165,130 @@ eval "$(rbenv init -)"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="/usr/local/opt/mysql-client/bin:$PATH"
+
+# tabtab source for packages
+# uninstall by removing these lines
+[[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
+
+# bun completions
+[ -s "/Users/henry/.bun/_bun" ] && source "/Users/henry/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+#source ~/.zsh/vscode/vscode.plugin.zsh
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+export PATH="/opt/homebrew/opt/php@7.4/bin:$PATH"
+export PATH="/opt/homebrew/opt/php@7.4/sbin:$PATH"
+
+export PATH="$PATH:`yarn global bin`"
+
+# place this after nvm initialization!
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+      nvm use
+    fi
+  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
+
+[[ -f "$HOME/fig-export/dotfiles/dotfile.zsh" ]] && builtin source "$HOME/fig-export/dotfiles/dotfile.zsh"
+
+# CodeWhisperer post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh"
+
+# ---- FZF -----
+
+# Set up fzf key bindings and fuzzy completion
+eval "$(fzf --zsh)"
+
+# --- setup fzf theme ---
+fg="#CBE0F0"
+bg="#011628"
+bg_highlight="#143652"
+purple="#B388FF"
+blue="#06BCE4"
+cyan="#2CF9ED"
+
+export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${purple},fg+:${fg},bg+:${bg_highlight},hl+:${purple},info:${blue},prompt:${cyan},pointer:${cyan},marker:${cyan},spinner:${cyan},header:${cyan}"
+
+# -- Use fd instead of fzf --
+
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+# Use fd (https://github.com/sharkdp/fd) for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --exclude .git . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type=d --hidden --exclude .git . "$1"
+}
+
+source ~/SharedSettings/fzf-git.sh/fzf-git.sh
+
+show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
+
+export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+# Advanced customization of fzf options via _fzf_comprun function
+# - The first argument to the function is the name of the command.
+# - You should make sure to pass the rest of the arguments to fzf.
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
+    export|unset) fzf --preview "eval 'echo \${}'"         "$@" ;;
+    ssh)          fzf --preview 'dig {}'                   "$@" ;;
+    *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
+  esac
+}
+
+# ----- Bat (better cat) -----
+
+export BAT_THEME=tokyonight_night
+
+# ---- Eza (better ls) -----
+alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
+alias ll="eza --color=always --long --git --icons=always"
+
+# ----- Zoxide (better cd) -----
+
+eval "$(zoxide init zsh)"
+alias cd="z"
+
+
+
+# To customize prompt, run `p10k configure` or edit ~/Library/Mobile\ Documents/com\~apple\~CloudDocs/SharedSettings/terminal/.p10k.zsh.
+[[ ! -f ~/Library/Mobile\ Documents/com\~apple\~CloudDocs/SharedSettings/terminal/.p10k.zsh ]] || source ~/Library/Mobile\ Documents/com\~apple\~CloudDocs/SharedSettings/terminal/.p10k.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

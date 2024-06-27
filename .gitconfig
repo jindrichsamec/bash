@@ -1,0 +1,60 @@
+# thx Vasek https://gist.github.com/1109501
+[user]
+	name = Jindřich Samec
+	email = jindrich.samec@xjs.cz
+[core]
+	# windows->true, linux-> input
+	autocrlf = input
+	safecrlf = false
+	# must be absolute path
+	excludesfile = ~/.gitignore_global
+	commentchar = ";"
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
+[merge]
+	conflictstyle = diff3
+
+[alias]
+	f = fetch
+	# updates your branch with upstream (if fast-forward is possible)
+	#  - works only if the branches are named the same and remote is origin
+	ff = !git merge --ff-only origin/`git branch 2>/dev/null | grep '*' | cut -d\" \" -f2-`
+	fp = fetch --prune
+	st = status
+	cm = commit
+	cma = commit --amend
+	br = branch
+	co = checkout
+	df = diff
+	rb = rebase
+	rbi = rebase -i
+	rbc = rebase --continue
+	cp = cherry-pick
+	su = submodule update
+	# graph for current branch
+	l  = log --graph --decorate --pretty=oneline --abbrev-commit
+	# graph for all branches
+	ll = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	# log for current branch showing diffs (-m is for showing mergecommits too)
+	ld = log -p -m
+	# log for current branch showing summary of changed files (-m is for showing mergecommits too)
+	ls = log --stat -m
+	# number of commits for each person
+	stats = shortlog -n -s --no-merges
+	# remove remote branch (remote must be named origin), usage: git rmb test
+	rmb = !sh -c 'git push origin :$1' -
+	# special branches
+	release = push origin HEAD:release
+	selenium = push origin HEAD:selenium
+	test = push origin HEAD:test
+	mergedone = merge --no-ff --no-commit
+[remote "origin"]
+	# git push -> push current HEAD into tracked remote branch
+	push = HEAD
+[diff]
+	mnemonicprefix = true
+	colorMoved = default
